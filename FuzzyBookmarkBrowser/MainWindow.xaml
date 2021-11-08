@@ -1,0 +1,97 @@
+﻿<Window x:Class="FuzzyBookmarkBrowser.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:FuzzyBookmarkBrowser"
+        mc:Ignorable="d"
+        Title="FuzzyBookmarkBrowser" Height="450" Width="800" Icon="/folder.png">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="1*" />
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*"></ColumnDefinition>
+            <ColumnDefinition Width="Auto"></ColumnDefinition>
+            <ColumnDefinition Width="Auto"></ColumnDefinition>
+            <ColumnDefinition Width="Auto"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Grid.Resources>
+            <Style x:Key="itemstyle" TargetType="{x:Type TreeViewItem}">
+                <!--<Style x:Key="itemstyle" TargetType="{x:Type ListViewItem}">-->
+                <EventSetter Event="MouseDoubleClick" Handler="HandleDoubleClick" />
+                <Setter Property="Visibility" Value="Visible" />
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding Hidden}" Value="True">
+                        <Setter Property="Visibility" Value="Collapsed" />
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+        </Grid.Resources>
+        <TextBox x:Name="tb_search" TextChanged="tb_search_TextChanged" />
+        <Button Name="btnRefresh" Content="Refresh" HorizontalAlignment="Right" Click="btnRefresh_ClickAsync" Grid.Column="2"></Button>
+        <TreeView x:Name="tv_bookmarks" ItemContainerStyle="{StaticResource itemstyle}" Grid.Row="1" VirtualizingStackPanel.IsVirtualizing="True" VirtualizingStackPanel.VirtualizationMode="Recycling" Grid.ColumnSpan="4">
+            <TreeView.ItemTemplate>
+                <HierarchicalDataTemplate DataType="{x:Type local:Child}" ItemsSource="{Binding Children}" >
+                    <Grid Background="{Binding SearchBg}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition></ColumnDefinition>
+                            <ColumnDefinition></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <Image Source="{Binding TypeImg}" Width="24" Margin="0,0,5,0"></Image>
+                        <TextBlock Text="{Binding Name}" Grid.Column="1"></TextBlock>
+                    </Grid>
+                </HierarchicalDataTemplate>
+            </TreeView.ItemTemplate>
+        </TreeView>
+        <StatusBar Grid.Row="2" Grid.ColumnSpan="4">
+            <StatusBarItem>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Margin="0,0,5,0">Antal matches:</TextBlock>
+                    <TextBlock x:Name="tb_numMatches" Grid.Column="1">0</TextBlock>
+                </Grid>
+            </StatusBarItem>
+            <StatusBarItem>
+                <CheckBox x:Name="cbx_openInIncognito" Content="Open in Incognito"></CheckBox>
+            </StatusBarItem>
+            <StatusBarItem>
+                <CheckBox x:Name="cbx_onlyShowMatches" Content="Only show matches" Click="cbx_onlyShowMatches_Click"/>
+            </StatusBarItem>
+        </StatusBar>
+        <!--<ListView x:Name="tv_bookmarks" ItemContainerStyle="{StaticResource itemstyle}" Grid.Row="1">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn>
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding LvlPadTxt}"></TextBlock>
+                                -->
+        <!--<Image Source="{Binding TypeImg}" Width="24" Margin="{Binding LvlMargin}"></Image>-->
+        <!--
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    
+                    <GridViewColumn Header="Name"
+                            DisplayMemberBinding="{Binding Name}"/>
+
+                    <GridViewColumn Header="Url"
+                            DisplayMemberBinding="{Binding Url}"/>
+
+                    <GridViewColumn Header="Type"
+                            DisplayMemberBinding="{Binding Type}"/>
+
+                    <GridViewColumn Header="Last Visited"
+                            DisplayMemberBinding="{Binding MetaInfo?.LastVisited}" />
+                </GridView>
+            </ListView.View>
+        </ListView>-->
+
+    </Grid>
+</Window>
