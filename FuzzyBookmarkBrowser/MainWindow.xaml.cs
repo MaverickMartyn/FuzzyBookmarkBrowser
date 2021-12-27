@@ -171,7 +171,7 @@ namespace FuzzyBookmarkBrowser
             var bookmarksJson = File.ReadAllText(System.IO.Path.GetFullPath(System.IO.Path.Combine(Environment.GetFolderPath(SpecialFolder.LocalApplicationData), @"Google\Chrome\User Data\Default\bookmarks")));
             if (!string.IsNullOrWhiteSpace(bookmarksJson))
             {
-                Root? bookmarksRoot = JsonConvert.DeserializeObject<Root>(bookmarksJson);
+                Root bookmarksRoot = JsonConvert.DeserializeObject<Root>(bookmarksJson);
                 if (bookmarksJson != null)
                 {
                     string srchTxt = "";
@@ -214,11 +214,11 @@ namespace FuzzyBookmarkBrowser
                 {
                     var nameWords = b.Name.Split(splitChars).Where(n => !String.IsNullOrWhiteSpace(n));
                     b.Likeness = (filters.Contains(b.Id) ? 1 : 0)
-                        + filters.Count(f => f.Contains(b.Name, StringComparison.InvariantCultureIgnoreCase))
-                        + filters.Count(f => nameWords.Any(nw => nw.Contains(f, StringComparison.InvariantCultureIgnoreCase)))
-                        + filters.Count(f => b.Name.Contains(f, StringComparison.InvariantCultureIgnoreCase))
-                        + filters.Count(f => f.Contains(b.Url ?? "", StringComparison.InvariantCultureIgnoreCase))
-                        + filters.Count(f => b.Url != null && b.Url.Contains(f, StringComparison.InvariantCultureIgnoreCase));
+                        + filters.Count(f => f.Contains(b.Name))
+                        + filters.Count(f => nameWords.Any(nw => nw.Contains(f)))
+                        + filters.Count(f => b.Name.Contains(f))
+                        + filters.Count(f => f.Contains(b.Url ?? ""))
+                        + filters.Count(f => b.Url != null && b.Url.Contains(f));
                     if (b.Likeness > 0)
                     {
                         _cntMatches++;
