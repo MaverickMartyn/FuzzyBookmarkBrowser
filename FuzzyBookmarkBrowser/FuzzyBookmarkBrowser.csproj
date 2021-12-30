@@ -3,6 +3,7 @@
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net48</TargetFramework>
+	<VersionPrefix>$(VersionNumber)</VersionPrefix>
     <UseWPF>true</UseWPF>
     <ApplicationIcon>Assets\bookmarks-icon.ico</ApplicationIcon>
   </PropertyGroup>
