@@ -35,7 +35,7 @@ namespace FuzzyBookmarkBrowser
         }
 
         [JsonIgnore]
-        public string TypeImg { get { return Type == "folder" ? "./folder.png" : "./file.png"; } }
+        public string TypeImg { get { return Type == "folder" ? "./Assets/folder.png" : "./Assets/file.png"; } }
 
         [JsonProperty("type")]
         public string Type { get; set; }

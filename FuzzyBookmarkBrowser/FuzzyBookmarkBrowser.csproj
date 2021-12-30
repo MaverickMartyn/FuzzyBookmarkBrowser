@@ -4,11 +4,14 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>net48</TargetFramework>
     <UseWPF>true</UseWPF>
+    <ApplicationIcon>Assets\bookmarks-icon.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="file.png" />
-    <None Remove="folder.png" />
+    <None Remove="Assets\bookmarks-icon.ico" />
+    <None Remove="Assets\bookmarks-icon.png" />
+    <None Remove="Assets\file.png" />
+    <None Remove="Assets\folder.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -17,8 +20,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="file.png" />
-    <Resource Include="folder.png" />
+    <Resource Include="Assets\bookmarks-icon.ico" />
+    <Resource Include="Assets\bookmarks-icon.png" />
+    <Resource Include="Assets\file.png" />
+    <Resource Include="Assets\folder.png" />
   </ItemGroup>
 
 </Project>
