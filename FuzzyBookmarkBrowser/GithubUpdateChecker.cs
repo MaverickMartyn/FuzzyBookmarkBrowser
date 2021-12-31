@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Net;
 using System.Reflection;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -41,9 +39,10 @@ namespace FuzzyBookmarkBrowser
                     MessageBox.Show("A newer version is available, but no downloadable assets could be found.\n" +
                         "Try manually updating from here: " + releases[0].Url, "Error getting update", MessageBoxButton.OK, MessageBoxImage.Error);
                 WebClient wc = new WebClient();
-                //wc.DownloadFileCompleted += Wc_DownloadUpdateFileCompleted;
+                
                 wc.DownloadFile(new Uri(asset.BrowserDownloadUrl), asset.Name);
                 _downloadedUpdateAsset = asset;
+
                 if (MessageBox.Show("An update is ready to install.\n" +
                     "Would you like to close now?", "Update ready", MessageBoxButton.YesNo, MessageBoxImage.Information) == MessageBoxResult.Yes)
                 {
@@ -58,9 +57,6 @@ namespace FuzzyBookmarkBrowser
 
         internal void InstallDownloadedUpdate()
         {
-            // Unzip asset.Name and overwrite self. How to avoid locking? C# script?
-            // Possible solution:
-            // Move existing files to bak folder, unpack and restart. 
             Directory.CreateDirectory(UPDATE_BACKUP_PATH);
             Directory.CreateDirectory(UPDATE_EXTRACT_PATH);
             // 1. unzip to temp "update" folder
@@ -74,16 +70,14 @@ namespace FuzzyBookmarkBrowser
             var allFiles = Directory.EnumerateFiles(UPDATE_EXTRACT_PATH, "*", SearchOption.AllDirectories);
             foreach (var file in allFiles)
             {
-                // create new_path from file
                 var new_path = file.Replace(UPDATE_EXTRACT_PATH + "\\", String.Empty);
+                // If exists, move existing file to backup folder, then continue
                 if (File.Exists(new_path))
                 {
-                    // construct backup_path
                     var backup_path = file.Replace(UPDATE_EXTRACT_PATH, UPDATE_BACKUP_PATH);
                     File.Move(new_path, backup_path);
                 }
                 File.Move(file, new_path);
-                // If exists, move existing file to backup folder, then continue
             }
 
             Directory.Delete(UPDATE_EXTRACT_PATH, true); // Clean up

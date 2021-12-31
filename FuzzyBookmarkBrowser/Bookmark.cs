@@ -1,12 +1,8 @@
 ﻿using Newtonsoft.Json;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using System.Windows;
 
 namespace FuzzyBookmarkBrowser
 {
-    // Root myDeserializedClass = JsonConvert.DeserializeObject<Root>(myJsonResponse); 
     public class Child
     {
         [JsonProperty("date_added")]

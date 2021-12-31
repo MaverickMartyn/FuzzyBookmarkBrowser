@@ -6,19 +6,10 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Security.Policy;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using static System.Environment;
 
 namespace FuzzyBookmarkBrowser
@@ -33,9 +24,7 @@ namespace FuzzyBookmarkBrowser
         {
             var bookmark = ((TreeViewItem)sender).DataContext as Child;
             if (bookmark != null && bookmark.Type != "folder")
-            {
                 LaunchURL(bookmark.Url);
-            }
         }
 
         internal string GetSystemDefaultBrowser()
@@ -46,20 +35,17 @@ namespace FuzzyBookmarkBrowser
             {
                 object progIdValue = userChoiceKey?.GetValue("Progid");
                 if (progIdValue == null)
-                {
                     throw new InvalidOperationException();
-                }
+
                 progId = progIdValue.ToString();
 
                 const string exeSuffix = ".exe";
                 string path = progId + @"\shell\open\command";
-                //FileInfo browserPath;
+                
                 using (RegistryKey pathKey = Registry.ClassesRoot.OpenSubKey(path))
                 {
                     if (pathKey == null)
-                    {
                         throw new InvalidOperationException();
-                    }
 
                     // Trim parameters.
                     try
@@ -68,7 +54,6 @@ namespace FuzzyBookmarkBrowser
                         if (!path.EndsWith(exeSuffix))
                         {
                             path = path.Substring(0, path.LastIndexOf(exeSuffix, StringComparison.Ordinal) + exeSuffix.Length);
-                            //browserPath = new FileInfo(path);
                         }
                     }
                     catch
@@ -156,27 +141,6 @@ namespace FuzzyBookmarkBrowser
             return sort;
         }
 
-        //private List<Child> SortBookmarks(List<Child> unorderedBookmarks)
-        //{
-        //    List<Child> sort = new List<Child>();
-        //    Action<List<Child>, int> selector = null;
-        //    var lvl = 0;
-        //    selector = (inputList, curLvl) => {
-        //        var topLayer = inputList.OrderByDescending(x => x.Likeness).ThenBy(x => x.Name);
-        //        foreach (var bm in topLayer)
-        //        {
-        //            bm.Lvl = curLvl;
-        //            sort.Add(bm);
-        //            if (bm.Children != null)
-        //                selector.Invoke(bm.Children, curLvl + 1);
-        //        }
-        //    };
-
-        //    selector.Invoke(unorderedBookmarks, lvl);
-
-        //    return sort;
-        //}
-
         private void UpdateBookmarkList()
         {
             var bookmarksJson = File.ReadAllText(System.IO.Path.GetFullPath(System.IO.Path.Combine(Environment.GetFolderPath(SpecialFolder.LocalApplicationData), @"Google\Chrome\User Data\Default\bookmarks")));
@@ -196,9 +160,6 @@ namespace FuzzyBookmarkBrowser
                     bookmarks = RankBookmarks(srchTxt, bookmarks);
                     bookmarks = SortBookmarks(bookmarks);
                 }
-
-                //lv_bookmarks.ItemsSource = bookmarks;
-                //callback();
             }
         }
 
@@ -272,22 +233,6 @@ namespace FuzzyBookmarkBrowser
                 }));
 
             });
-
-            //Func<List<Child>, List<Child>> setLikeness = null;
-            //setLikeness = (bs) =>
-            //{
-            //    foreach (var b in bs)
-            //    {
-            //        b.Likeness = filters.Select(f => FuzzySharp.Fuzz.Ratio(f, b.Name) + FuzzySharp.Fuzz.Ratio(f, b.Url)).Sum();
-            //        if (b.Children != null)
-            //        {
-            //            b.Children = setLikeness.Invoke(b.Children);
-            //        }
-            //    }
-            //    return bs;
-            //};
-
-            //bookmarks = setLikeness.Invoke(bookmarks);
 
             _refreshQueueTask = null;
             _nextUpdateAllowed = DateTime.Now.AddSeconds(1).AddMilliseconds(500);
