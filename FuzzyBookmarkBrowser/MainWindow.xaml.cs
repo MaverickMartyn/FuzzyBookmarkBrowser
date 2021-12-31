@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -27,6 +28,7 @@ namespace FuzzyBookmarkBrowser
     /// </summary>
     public partial class MainWindow : Window
     {
+        private readonly GithubUpdateChecker _updateChecker = new GithubUpdateChecker();
         protected void HandleDoubleClick(object sender, MouseButtonEventArgs e)
         {
             var bookmark = ((TreeViewItem)sender).DataContext as Child;
@@ -117,6 +119,8 @@ namespace FuzzyBookmarkBrowser
         {
             InitializeComponent();
 
+            _ = _updateChecker.CheckForUpdatesAsync();
+
             Task.Run(() =>
             {
                 UpdateBookmarkList();
@@ -124,6 +128,13 @@ namespace FuzzyBookmarkBrowser
                     tv_bookmarks.ItemsSource = bookmarks;
                 }));
             });
+        }
+
+        protected override void OnClosing(CancelEventArgs e)
+        {
+            if (_updateChecker.IsUpdateReady)
+                _updateChecker.InstallDownloadedUpdate();
+            base.OnClosing(e);
         }
 
         private List<Child> SortBookmarks(List<Child> unorderedBookmarks)
